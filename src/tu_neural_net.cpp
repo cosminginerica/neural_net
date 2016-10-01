@@ -1,7 +1,7 @@
 #include <iostream>
 #include "FullyConnectedLayer.h"
 #include "NeuralNetwork.h"
-
+#include "ConvPoolLayer.h"
 void help()
 {
     std::cout << "Usage: NEURAL_NET train_data train_labels test_data test_labels" << std::endl;

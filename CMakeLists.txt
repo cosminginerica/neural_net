@@ -11,6 +11,9 @@ set( NEURAL_NET_SRC
 		src/tu_neural_net.cpp
 		src/FullyConnectedLayer.cpp
 		src/Activations.cpp
+		src/FeatureMapLayer.cpp
+		src/MaxPoolLayer.cpp
+		src/ConvPoolLayer.cpp
 )
 
 set( NEURAL_NET_HEADERS       
@@ -24,6 +27,9 @@ set( NEURAL_NET_HEADERS
 	 include/FullyConnectedLayer.h
 	 include/NeuronLayer.h
 	 include/Activations.h
+	 include/FeatureMapLayer.h
+	 include/MaxPoolLayer.h
+	 include/ConvPoolLayer.h
 )
 
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/include )

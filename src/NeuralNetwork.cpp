@@ -24,7 +24,7 @@ bool NeuralNetwork::initNeuronLayers()
 
 void NeuralNetwork::setInputs(FloatingType** input)
 {
-	neuronLayers[0].first->setInputs(input, neuronLayers[0].first->getRows(), neuronLayers[0].first->getCols());
+    neuronLayers[0].first->setInputs(input, neuronLayers[0].first->getRows(), neuronLayers[0].first->getCols());
 }
 
 void NeuralNetwork::encodeInput(const unsigned rows, const unsigned cols, const int activation)

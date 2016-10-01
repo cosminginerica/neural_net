@@ -27,3 +27,13 @@
 *.exe
 *.out
 *.app
+
+# Qt stuff
+*.config
+*.creator
+*.files
+*.includes
+*.config
+*.creator
+*.files
+*.includes
