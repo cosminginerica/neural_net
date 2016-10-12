@@ -63,298 +63,207 @@ namespace HelperFunctions
 {
     static const FloatingType sigmoid(const FloatingType z){return 1.0 / (1.0 + exp(-z));}
     static const FloatingType relu(const FloatingType z){ return (z >= 0)? z : 0; }
-	inline FloatingType** vec2mat(FloatingType * vec, const unsigned dim, const unsigned rows, const unsigned cols)
+	
+    inline FloatingType* mat2vec(FloatingType** mat, const unsigned rows, const unsigned cols)
+    {
+	FloatingType* res = new FloatingType[rows * cols];
+	unsigned crtIdx = 0;
+	for (unsigned i = 0; i < rows; ++i)
 	{
-		if (rows * cols != dim)
+		for (unsigned j = 0; j < cols; ++j)
 		{
-			std::cout << "Can not transform vec to mat. New dimensions don't match" << std::endl;
-				return NULL;
+			res[crtIdx++] = mat[i][j];
 		}
-		FloatingType ** res = new FloatingType*[rows];
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			res[i] = new FloatingType[cols];
-		}
-		unsigned crtIdx = 0;
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[i][j] = vec[crtIdx++];
-			}
-		}
-		return res;
-	}
-	inline FloatingType* mat2vec(FloatingType** mat, const unsigned rows, const unsigned cols)
-	{
-		FloatingType* res = new FloatingType[rows * cols];
-		unsigned crtIdx = 0;
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[crtIdx++] = mat[i][j];
-			}
-		}
-
-		return res;
-	}
-	inline FloatingType* sigmoid_vec(FloatingType* a, int size)
-	{
-		FloatingType *res = new FloatingType[size];
-		for (int i = 0; i < size; ++i)
-		{
-			res[i] = sigmoid(a[i]);
-		}
-		return res;
 	}
 
-	inline FloatingType* relu_vec(FloatingType* a, int size)
+	return res;
+    }
+    inline FloatingType* sigmoid_vec(FloatingType* a, int size)
+    {
+	FloatingType *res = new FloatingType[size];
+	for (int i = 0; i < size; ++i)
 	{
-		FloatingType *res = new FloatingType[size];
-		for (int i = 0; i < size; ++i)
+		res[i] = sigmoid(a[i]);
+	}
+	return res;
+    }
+
+    inline FloatingType* relu_vec(FloatingType* a, int size)
+    {
+	FloatingType *res = new FloatingType[size];
+	for (int i = 0; i < size; ++i)
+	{
+		res[i] = relu(a[i]);
+	}
+	return res;
+    }
+
+    inline FloatingType** sigmoid_mat(FloatingType** mat, const unsigned rows, const unsigned cols)
+    {
+	FloatingType** res = new FloatingType*[rows];
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		res[i] = new FloatingType[cols];
+	}
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		for (unsigned j = 0; j < cols; ++j)
 		{
-			res[i] = relu(a[i]);
+			res[i][j] = sigmoid(mat[i][j]);
 		}
-		return res;
+	}
+	return res;
+    }
+
+    inline FloatingType** relu_mat(FloatingType** mat, const unsigned rows, const unsigned cols)
+    {
+	FloatingType** res = new FloatingType*[rows];
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		res[i] = new FloatingType[cols];
+	}
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		for (unsigned j = 0; j < cols; ++j)
+		{
+			res[i][j] = relu(mat[i][j]);
+		}
+	}
+	return res;
+    }
+
+    inline FloatingType** softmax_mat(FloatingType** mat, const unsigned rows, const unsigned cols)
+    {
+	FloatingType sum = 0;
+	FloatingType** res = new FloatingType*[rows];
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		res[i] = new FloatingType[cols];
+	}
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		for (unsigned j = 0; j < cols; ++j)
+		{
+			sum += exp(mat[i][j]);
+		}
+	}
+	
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		for (unsigned j = 0; j < cols; ++j)
+		{
+			res[i][j] = exp(mat[i][j]) / sum;
+		}
 	}
 
-	inline FloatingType** sigmoid_mat(FloatingType** mat, const unsigned rows, const unsigned cols)
-	{
-		FloatingType** res = new FloatingType*[rows];
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			res[i] = new FloatingType[cols];
-		}
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[i][j] = sigmoid(mat[i][j]);
-			}
-		}
-		return res;
-	}
-
-	inline FloatingType** relu_mat(FloatingType** mat, const unsigned rows, const unsigned cols)
-	{
-		FloatingType** res = new FloatingType*[rows];
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			res[i] = new FloatingType[cols];
-		}
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[i][j] = relu(mat[i][j]);
-			}
-		}
-		return res;
-	}
-
-	inline FloatingType** softmax_mat(FloatingType** mat, const unsigned rows, const unsigned cols)
-	{
-		FloatingType sum = 0;
-		FloatingType** res = new FloatingType*[rows];
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			res[i] = new FloatingType[cols];
-		}
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				sum += exp(mat[i][j]);
-			}
-		}
-		
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[i][j] = exp(mat[i][j]) / sum;
-			}
-		}
-
-		return res;
-	}
+	return res;
+    }
 
     static const FloatingType sigmoid_prime(const FloatingType z){return sigmoid(z) * (1 - sigmoid(z));}
     static const FloatingType relu_prime(const FloatingType z){ return relu(z); }
 
-	static const FloatingType softmax_prime(FloatingType* a, const unsigned idx, const unsigned size)
+    static const FloatingType softmax_prime(FloatingType* a, const unsigned idx, const unsigned size)
+    {
+	FloatingType sum = 0;
+	for (unsigned i = 0; i < size; ++i)
 	{
-		FloatingType sum = 0;
-		for (unsigned i = 0; i < size; ++i)
-		{
-			sum += exp(a[i]);
-		}
-		return exp(a[idx]) / sum;
+		sum += exp(a[i]);
 	}
-	inline FloatingType* sigmoid_prime_vec(FloatingType* a, int size)
+	return exp(a[idx]) / sum;
+    }
+
+    inline FloatingType* sigmoid_prime_vec(FloatingType* a, int size)
+    {
+	FloatingType *res = new FloatingType[size];
+	for (int i = 0; i < size; ++i)
 	{
-		FloatingType *res = new FloatingType[size];
-		for (int i = 0; i < size; ++i)
-		{
-			res[i] = sigmoid_prime(a[i]);
-		}
-		return res;
+		res[i] = sigmoid_prime(a[i]);
 	}
+	return res;
+    }
+
+    inline FloatingType* relu_prime_vec(FloatingType* a, int size)
+    {
+	FloatingType *res = new FloatingType[size];
+	for (int i = 0; i < size; ++i)
+	{
+		res[i] = relu(a[i]);
+	}
+	return res;
+    }
+
+    inline FloatingType* softmax_prime_vec(FloatingType* a, int size)
+    {
+	FloatingType *res = new FloatingType[size];
+	for (int i = 0; i < size; ++i)
+	{
+		res[i] = softmax_prime(a, i, size);
+	}
+	return res;
+    }
+
+    inline FloatingType** sigmoid_prime_mat(FloatingType** a, unsigned rows, unsigned cols)
+    {
+	FloatingType **res = new FloatingType*[rows];
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		res[i] = new FloatingType[cols];
+	}
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		for (unsigned j = 0; j < cols; ++j)
+		{
+			res[i][j] = sigmoid_prime(a[i][j]);
+		}
+	}
+	return res;
+    }
+
+    inline FloatingType** relu_prime_mat(FloatingType** a, unsigned rows, unsigned cols)
+    {
+	FloatingType **res = new FloatingType*[rows];
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		res[i] = new FloatingType[cols];
+	}
+	for (unsigned i = 0; i < rows; ++i)
+	{
+		for (unsigned j = 0; j < cols; ++j)
+		{
+			res[i][j] = relu_prime(a[i][j]);
+		}
+	}
+	return res;
+    }
+
+    static const FloatingType randomNumber()
+    {
+
+	FloatingType val = (FloatingType)rand() / RAND_MAX;
+	return val;
+    }
+
+    // flip the bytes of an 8 byte integer
+    inline unsigned int reverseBytes(unsigned int number)
+    {
+	unsigned int flippedNumber = 0;
+	unsigned int mask = 255;
+
+	flippedNumber |= (number & mask) << 24;
+	mask = 255 << 8;
+	flippedNumber |= (number & mask) << 16;
+	mask = 255 << 16;
+	flippedNumber |= (number & mask) >> 8;
+	mask = 255 << 24;
+	flippedNumber |= (number & mask) >> 24;
+
+	return flippedNumber;
+
+    }
+
 	
-	inline FloatingType* relu_prime_vec(FloatingType* a, int size)
-	{
-		FloatingType *res = new FloatingType[size];
-		for (int i = 0; i < size; ++i)
-		{
-			res[i] = relu(a[i]);
-		}
-		return res;
-	}
 
-	inline FloatingType* softmax_prime_vec(FloatingType* a, int size)
-	{
-		FloatingType *res = new FloatingType[size];
-		for (int i = 0; i < size; ++i)
-		{
-			res[i] = softmax_prime(a, i, size);
-		}
-		return res;
-	}
-
-	inline FloatingType** sigmoid_prime_mat(FloatingType** a, unsigned rows, unsigned cols)
-	{
-		FloatingType **res = new FloatingType*[rows];
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			res[i] = new FloatingType[cols];
-		}
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[i][j] = sigmoid_prime(a[i][j]);
-			}
-		}
-		return res;
-	}
-
-	inline FloatingType** relu_prime_mat(FloatingType** a, unsigned rows, unsigned cols)
-	{
-		FloatingType **res = new FloatingType*[rows];
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			res[i] = new FloatingType[cols];
-		}
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				res[i][j] = relu_prime(a[i][j]);
-			}
-		}
-		return res;
-	}
-
-	static const FloatingType randomNumber()
-	{
-
-		FloatingType val = (FloatingType)rand() / RAND_MAX;
-		return val;
-	}
 	
-	// flip the bytes of an 8 byte integer
-	inline unsigned int reverseBytes(unsigned int number)
-	{
-		unsigned int flippedNumber = 0;
-		unsigned int mask = 255;
-
-		flippedNumber |= (number & mask) << 24;
-		mask = 255 << 8;
-		flippedNumber |= (number & mask) << 16;
-		mask = 255 << 16;
-		flippedNumber |= (number & mask) >> 8;
-		mask = 255 << 24;
-		flippedNumber |= (number & mask) >> 24;
-
-		return flippedNumber;
-
-	}
-
-	inline FloatingType** matrixMultiplication(FloatingType **m1, int m1Rows, int m1Cols, FloatingType **m2, int m2Rows, int m2Cols)
-	{
-		if (m1Cols != m2Rows || m1Cols == 0 || m2Cols == 0 || m1Rows == 0 || m2Rows == 0)
-		{
-			return NULL;
-		}
-		FloatingType **result;
-		result = new FloatingType *[m1Rows];
-		for (int i = 0; i < m1Rows; ++i)
-		{
-			result[i] = new FloatingType[m1Cols];
-		}
-		
-		for (int i = 0; i < m1Rows; ++i)
-		{
-			for (int j = 0; j < m2Cols; ++j)
-			{
-				result[i][j] = 0;
-			}
-		}
-
-		for (int i = 0; i < m1Rows; ++i)
-		{
-			for (int j = 0; j < m2Cols; ++j)
-			{
-				FloatingType sum = 0.;
-				for (int k = 0; k < m1Rows; ++k)
-				{
-					sum += m1[i][k] * m2[k][j];
-				}
-				result[i][j] = sum;
-			}
-		}
-
-		return result;
-	}
-	inline FloatingType** matrixTranspose(FloatingType **m, int mRows, int mCols)
-	{	
-		FloatingType **result = new FloatingType *[mCols];
-		for (int i = 0; i < mCols; ++i)
-		{
-			result[i] = new FloatingType[mRows];
-		}
-		for (int i = 0; i < mRows; ++i)
-		{
-			for (int j = 0; j < mCols; ++j)
-			{
-				result[j][i] = m[i][j];
-			}
-		}
-
-		return result;
-	}
-
-	inline FloatingType* matVecMul(FloatingType **m1, int m1Rows, int m1Cols, FloatingType *m2, int m2Rows)
-	{
-		FloatingType * result = new FloatingType[m1Rows];
-		for (int i = 0; i < m1Rows; ++i)
-		{
-			result[i] = 0;
-		}
-
-		for (int i = 0; i < m1Rows; ++i)
-		{
-			FloatingType sum = 0.;
-			for (int k = 0; k < m1Cols; ++k)
-			{
-				sum += m1[i][k] * m2[k];
-			}
-			result[i] = sum;
-		}
-		
-		return result;
-	}
 
 	inline FloatingType* vectorAddition(FloatingType *m1, int m1Rows, FloatingType *m2, int m2Rows)
 	{
