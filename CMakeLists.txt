@@ -14,6 +14,7 @@ set( NEURAL_NET_SRC
 		src/FeatureMapLayer.cpp
 		src/MaxPoolLayer.cpp
 		src/ConvPoolLayer.cpp
+		src/MatrixOperations.cpp
 )
 
 set( NEURAL_NET_HEADERS       
@@ -30,6 +31,7 @@ set( NEURAL_NET_HEADERS
 	 include/FeatureMapLayer.h
 	 include/MaxPoolLayer.h
 	 include/ConvPoolLayer.h
+	 include/MatrixOperations.h
 )
 
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/include )
