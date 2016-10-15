@@ -5,7 +5,7 @@ FeatureMapLayer::FeatureMapLayer(const unsigned _localReceptiveFieldSize,
                 const int _costFunction,
                 const int _activation) : 
     localReceptiveFieldSize(_localReceptiveFieldSize), 
-    strideSize(_strideSize),
+    strideSize(_strideSize)
 {
     rows = (inputLayer->getRows() - localReceptiveFieldSize + 1) / strideSize;
     cols = (inputLayer->getCols() - localReceptiveFieldSize + 1) / strideSize;
@@ -57,9 +57,8 @@ void FeatureMapLayer::calculateOutputs()
 
 void FeatureMapLayer::backPropagate(const int label)
 {
-	assert(!isOutput);
 	FloatingType **nextDeltas = outputLayer->getDelta();
-	if (outputLayer->getClassId() == "MaxPoolLayer")
+	if (outputLayer->getClassId() == "MaxPool")
 	{
 	    FloatingType **nextDeltasExpanded = mp2fm();
 	    for (unsigned i = 0; i < rows; ++i)
