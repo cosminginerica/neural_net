@@ -196,12 +196,23 @@ void FullyConnectedLayer::backPropagate(const int label)
 		else
 		{
 			FloatingType **nextWeights = outputLayer->getWeights();
-			FloatingType **w_t = HelperFunctions::matrixTranspose(nextWeights, outputLayer->getNumberOfNeurons(), numberOfNeurons);
+			FloatingType **w_t = HelperFunctions::matrixTranspose(nextWeights, 
+			                                                      outputLayer->getNumberOfNeurons(),
+			                                                      numberOfNeurons);
 			FloatingType **nextDelta = outputLayer->getDelta();
-			FloatingType *nextDeltaVec = HelperFunctions::mat2vec(nextDelta, outputLayer->getRows(), outputLayer->getCols());
-			FloatingType *w_d = HelperFunctions::matVecMul(w_t, numberOfNeurons, outputLayer->getNumberOfNeurons(), nextDeltaVec, outputLayer->getNumberOfNeurons());
+			
+			FloatingType *nextDeltaVec = HelperFunctions::mat2vec(nextDelta, 
+			                                                      outputLayer->getRows(), 
+			                                                      outputLayer->getCols());
+			                                                      
+			FloatingType *w_d = HelperFunctions::matVecMul(w_t, 
+			                                               numberOfNeurons, 
+			                                               outputLayer->getNumberOfNeurons(), 
+			                                               nextDeltaVec, 
+			                                               outputLayer->getNumberOfNeurons());
+			                                               
 			FloatingType *zsVec = HelperFunctions::mat2vec(zs, rows, cols);
-			FloatingType* sigmoids = activation->activationPrimeVec(zsVec, numberOfNeurons);//HelperFunctions::sigmoid_prime_vec(zsVec, numberOfNeurons);
+			FloatingType* sigmoids = activation->activationPrimeVec(zsVec, numberOfNeurons);
 			FloatingType* d = HelperFunctions::hadamardProduct(w_d, sigmoids, numberOfNeurons);
 			unsigned crtIdx = 0;
 			for (unsigned i = 0; i < rows; ++i)

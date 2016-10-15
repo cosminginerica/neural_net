@@ -7,6 +7,7 @@
 class ConvPoolLayer : public NeuronLayer
 {
 public:
+    ConvPoolLayer(unsigned _numFeatureMaps, unsigned _localReceptiveFieldSize, unsigned _maxPoolSize, unsigned _strideSize);
     void calculateOutputs();
     void initializeWeights();
     void initializeBiases();
@@ -22,10 +23,11 @@ public:
     void updateBiases(const FloatingType eta, const int miniBatchSize);
     void init();
     std::string const getClassId();
+    const unsigned getNumberOfNeurons();
 private:
     std::vector<FeatureMapLayer> featureMaps;
     std::vector<MaxPoolLayer> maxPools;
-
+    unsigned numFeatureMaps, localReceptiveFieldSize, maxPoolSize, strideSize;
 };
 
 #endif
