@@ -1,7 +1,7 @@
-#include "MaxPoolingLayer.h"
-#include "FeatureMapLayer.h"
+#include "MaxPoolLayer.h"
 
-void MaxPoolingLayer::calculateOutputs()
+
+void MaxPoolLayer::calculateOutputs()
 {
 	FloatingType **prevOutputs = inputLayer->getOutputs();
 	FloatingType **prevZs = inputLayer->getZ();
@@ -33,17 +33,17 @@ void MaxPoolingLayer::calculateOutputs()
 
 }
 
-FloatingType** MaxPoolingLayer::getOutputs()
+FloatingType** MaxPoolLayer::getOutputs()
 {
 	return activations;
 }
 
-const int MaxPoolingLayer::getOutputSize()
+const int MaxPoolLayer::getOutputSize()
 {
 	return numberOfNeurons;
 }
 
-void MaxPoolingLayer::backPropagate(const int label)
+void MaxPoolLayer::backPropagate(const int label)
 {
 	FloatingType **nextWeights;
 	nextWeights= outputLayer->getWeights();
@@ -87,10 +87,8 @@ void MaxPoolingLayer::backPropagate(const int label)
 	delete[]w_t;
 }
 
-void MaxPoolingLayer::init()
+void MaxPoolLayer::init()
 {
-	assert(inputLayer->getCols() % maxPoolSize == 0 && inputLayer->getRows() % maxPoolSize == 0);
-	isOutput = false;
 	numberOfNeurons = inputLayer->getNumberOfNeurons() / (2 * maxPoolSize);
 	this->rows = inputLayer->getRows() / maxPoolSize;
 	this->cols = inputLayer->getCols() / maxPoolSize;
@@ -105,14 +103,14 @@ void MaxPoolingLayer::init()
 	}
 }
 
-FloatingType** MaxPoolingLayer::getDelta()
+FloatingType** MaxPoolLayer::getDelta()
 {
 	return deltas;
 }
 
-ostream& MaxPoolingLayer::serialize(ostream& f)const
+ostream& MaxPoolLayer::serialize(ostream& f)const
 {
-	f << "Class ID:" << this->classId.c_str() << std::endl;
+	f << "Class ID:" << "MaxPool" << std::endl;
 	f << "Number of neurons:" << this->numberOfNeurons << std::endl;
 	f << "Rows:" << this->rows << std::endl;
 	f << "Cols:" << this->cols << std::endl;

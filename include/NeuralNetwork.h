@@ -4,6 +4,7 @@
 #include <fstream>
 #include <assert.h>
 #include "Types.h"
+#include "MatrixOperations.h"
 #include "NeuronLayer.h"
 #include "FullyConnectedLayer.h"
 #include "DataLoader.h"

@@ -14,8 +14,7 @@ void ConvPoolLayer::initializeWeights()
 {
     for (unsigned i = 0; i < featureMaps.size(); ++i)
     {
-        featureMaps[i].initializeWeights();
-        maxPools[i].initializeWeights();
+        featureMaps[i].initWeights();
     }
 }
 
@@ -23,8 +22,7 @@ void ConvPoolLayer::initializeBiases()
 {
     for (unsigned i = 0; i < featureMaps.size(); ++i)
     {
-        featureMaps[i].initializeBiases();
-        maxPools[i].initializeBiases();
+        featureMaps[i].initBias();
     }
 
 }
@@ -43,8 +41,8 @@ void ConvPoolLayer::backPropagate(const int label)
 {
     for (unsigned i = 0; i < featureMaps.size(); ++i)
     {
-        maxPools[i].backPropagate();
-        featureMaps[i].backPropagate();
+        maxPools[i].backPropagate(label);
+        featureMaps[i].backPropagate(label);
     }
 }
 

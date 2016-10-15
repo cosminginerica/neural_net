@@ -2,12 +2,12 @@
 #define MAXPOOLINGLAYER_H
 #include "NeuronLayer.h"
 #include "Types.h"
-#include <assert.h>
+#include "Activations.h"
 class MaxPoolLayer
 {
 public:
-	MaxPoolingLayer(const unsigned maxPoolSize, int activation) : maxPoolSize(maxPoolSize){}
-	MaxPoolingLayer(){}
+	MaxPoolLayer(const unsigned maxPoolSize, int activation) : maxPoolSize(maxPoolSize){}
+	MaxPoolLayer(){}
 	void calculateOutputs();
 	FloatingType** getOutputs();
 	const int getOutputSize();
@@ -22,6 +22,14 @@ public:
 private:
 	unsigned maxPoolSize;
 	unsigned nrNeuronsPerPool;
+	unsigned numberOfNeurons;
+	unsigned rows;
+	unsigned cols;
 	NeuronLayer *outputLayer, *inputLayer;
+	FloatingType **activations;
+	FloatingType **zs;
+	FloatingType **deltas;
+	Activation *activation;
+	
 };
 #endif

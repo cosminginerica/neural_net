@@ -63,28 +63,7 @@ namespace HelperFunctions
 {
     static const FloatingType sigmoid(const FloatingType z){return 1.0 / (1.0 + exp(-z));}
     static const FloatingType relu(const FloatingType z){ return (z >= 0)? z : 0; }
-    inline FloatingType** vec2mat(FloatingType * vec, const unsigned dim, const unsigned rows, const unsigned cols)
-    {
-        if (rows * cols != dim)
-        {
-            std::cout << "Can not transform vec to mat. New dimensions don't match" << std::endl;
-            return NULL;
-        }
-        FloatingType ** res = new FloatingType*[rows];
-        for (unsigned i = 0; i < rows; ++i)
-        {
-            res[i] = new FloatingType[cols];
-        }
-        unsigned crtIdx = 0;
-        for (unsigned i = 0; i < rows; ++i)
-        {
-            for (unsigned j = 0; j < cols; ++j)
-            {
-                res[i][j] = vec[crtIdx++];
-            }
-        }
-        return res;
-    }
+
     inline FloatingType* mat2vec(FloatingType** mat, const unsigned rows, const unsigned cols)
     {
         FloatingType* res = new FloatingType[rows * cols];
