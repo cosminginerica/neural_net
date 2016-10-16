@@ -1,6 +1,14 @@
 #include "ConvPoolLayer.h"
-ConvPoolLayer::ConvPoolLayer() : hasFormattedOutput(false), formattedOutput(NULL)
+
+ConvPoolLayer::ConvPoolLayer(unsigned _numFeatureMaps, unsigned _localReceptiveFieldSize, unsigned _maxPoolSize, unsigned _strideSize):
+    numFeatureMaps(_numFeatureMaps),
+    localReceptiveFieldSize(_localReceptiveFieldSize),
+    maxPoolSize(_maxPoolSize),
+    strideSize(_strideSize),
+    hasFormattedOutput(false),
+    formattedOutput(NULL)
 {
+
 }
 
 void ConvPoolLayer::calculateOutputs()
@@ -62,6 +70,23 @@ void ConvPoolLayer::initializeWeights()
     {
         featureMaps[i].initWeights();
     }
+    unsigned newRows = numberOfNeurons;
+    unsigned newCols = inputLayer->getNumberOfNeurons();
+    weights = new FloatingType*[numberOfNeurons];
+    nablaW = new FloatingType*[numberOfNeurons];
+    for (unsigned i = 0; i < newRows; ++i)
+    {
+        weights[i] = new FloatingType[newCols];
+        nablaW[i] = new FloatingType[newCols];
+    }
+    for (unsigned i = 0; i < newRows; ++i)
+    {
+        for (unsigned j = 0; j < newCols; ++j)
+        {
+            weights[i][j] = 0;
+            nablaW[i][j] = 0;
+        }
+    }
 }
 
 void ConvPoolLayer::initializeBiases()
@@ -89,7 +114,7 @@ void ConvPoolLayer::backPropagate(const int label)
 {
     for (unsigned i = 0; i < featureMaps.size(); ++i)
     {
-        maxPools[i].backPropagate(label);
+        maxPools[i].backPropagate();
         featureMaps[i].backPropagate();
     }
 }
@@ -98,12 +123,38 @@ FloatingType **ConvPoolLayer::getWeights()
 {
     unsigned newRows = numberOfNeurons;
     unsigned newCols = inputLayer->getNumberOfNeurons();
+    unsigned rowsStep = featureMaps[0].getRows();
 
+    // construct weight matrix based on all feature maps' expanded weight matrices
+    FloatingType **currentWMat = NULL;
+    for (unsigned i = 0; i < newRows; ++i)
+    {
+        if (i % rowsStep == 0)
+        {
+            if (currentWMat)
+            {
+                for (unsigned i = 0; i < inputLayer->getNumberOfNeurons(); ++i)
+                {
+                    delete []currentWMat[i];
+                }
+                delete []currentWMat;
+            }
+            currentWMat = featureMaps[i / rowsStep].getExpandedWeightMatrix();
+        }
+        for (unsigned j = 0; j < newCols; ++j)
+        {
+            weights[i][j] = currentWMat[i % rowsStep][j];
+        }
+    }
+    return weights;
 }
 
 void ConvPoolLayer::updateNablaB()
 {
-
+    for (unsigned i = 0; i < featureMaps.size(); ++i)
+    {
+        featureMaps[i].updateNablaB();
+    }
 }
 
 void ConvPoolLayer::updateNablaW()

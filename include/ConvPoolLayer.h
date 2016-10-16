@@ -31,6 +31,8 @@ private:
     std::vector<MaxPoolLayer> maxPools;
     unsigned numFeatureMaps, localReceptiveFieldSize, maxPoolSize, strideSize;
     bool hasFormattedOutput;
+    FloatingType **nablaW;
+    FloatingType *nablaB;
 };
 
 #endif

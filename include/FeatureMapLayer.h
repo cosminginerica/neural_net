@@ -34,6 +34,8 @@ public:
     void initActivations();
     void initWeights();
     void initBias();
+    const unsigned getRows()const{return rows;}
+    const unsigned getCols()const{return cols;}
     FloatingType ** mp2fm();
     FloatingType** getExpandedWeightMatrix();
     void setActivation(Activation* activation){ this->activation = activation; }
