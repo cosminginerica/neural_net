@@ -10,6 +10,11 @@ void ConvPoolLayer::calculateOutputs()
     }
 }
 
+const unsigned ConvPoolLayer::getNumberOfNeurons()
+{
+
+}
+
 void ConvPoolLayer::initializeWeights()
 {
     for (unsigned i = 0; i < featureMaps.size(); ++i)

@@ -54,6 +54,43 @@ void FeatureMapLayer::calculateOutputs()
 	}
 }
 
+void FeatureMapLayer::initWeights()
+{
+	weights = new FloatingType *[localReceptiveFieldSize];
+	nablaW = new FloatingType *[localReceptiveFieldSize];
+	for (unsigned i = 0; i < localReceptiveFieldSize; ++i)
+	{
+		weights[i] = new FloatingType[localReceptiveFieldSize];
+		nablaW[i] = new FloatingType[localReceptiveFieldSize];
+	}
+	for (unsigned i = 0; i < localReceptiveFieldSize; ++i)
+	{
+		for (unsigned j = 0; j < localReceptiveFieldSize; ++j)
+		{
+			weights[i][j] = (HelperFunctions::randomNumber() - 0.5);
+			nablaW[i][j] = 0;
+		}
+	}
+	unsigned prevNumberOfNeurons = inputLayer->getNumberOfNeurons();
+	nablaWExpanded = new FloatingType *[numberOfNeurons];
+	for (unsigned i = 0; i < numberOfNeurons; ++i)
+	{
+		nablaWExpanded[i] = new FloatingType[prevNumberOfNeurons];
+	}
+	for (unsigned i = 0; i < numberOfNeurons; ++i)
+	{
+		for (unsigned j = 0; j < prevNumberOfNeurons; ++j)
+		{
+			nablaWExpanded[i][j] = 0;
+		}
+	}
+}
+
+void FeatureMapLayer::initBias()
+{
+	bias = HelperFunctions::randomNumber() - 0.5;
+	nablaB = 0;
+}
 
 void FeatureMapLayer::backPropagate(const int label)
 {

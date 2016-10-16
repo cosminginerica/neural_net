@@ -100,7 +100,9 @@ FloatingType** HelperFunctions::matrixMultiplication(FloatingType **m1,
     return result;
 }
 
-FloatingType** HelperFunctions::matrixTranspose(FloatingType **m, const unsigned mRows, const unsigned mCols)
+FloatingType** HelperFunctions::matrixTranspose(FloatingType **m, 
+                                                const unsigned mRows, 
+                                                const unsigned mCols)
 {	
     FloatingType **result = new FloatingType *[mCols];
     for (int i = 0; i < mCols; ++i)
@@ -118,7 +120,7 @@ FloatingType** HelperFunctions::matrixTranspose(FloatingType **m, const unsigned
     return result;
 }
 
-inline FloatingType* HelperFunctions::matVecMul(FloatingType **m1, 
+FloatingType* HelperFunctions::matVecMul(FloatingType **m1, 
                                                 const unsigned m1Rows, 
                                                 const unsigned m1Cols, 
                                                 FloatingType *m2, 
