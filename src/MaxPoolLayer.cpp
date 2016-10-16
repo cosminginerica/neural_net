@@ -43,7 +43,7 @@ const int MaxPoolLayer::getOutputSize()
 	return numberOfNeurons;
 }
 
-void MaxPoolLayer::backPropagate(const int label)
+void MaxPoolLayer::backPropagate()
 {
 	FloatingType **nextWeights;
 	nextWeights= outputLayer->getWeights();

@@ -11,8 +11,10 @@ public:
 	void calculateOutputs();
 	FloatingType** getOutputs();
 	const int getOutputSize();
-	void backPropagate(const int label);
+    void backPropagate();
 	FloatingType ** getWeights();
+    const unsigned getRows()const{return rows;}
+    const unsigned getCols()const{return cols;}
 
 	void init();
 	std::string const getClassId(){ return "MaxPool"; }

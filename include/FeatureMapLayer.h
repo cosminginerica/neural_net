@@ -19,7 +19,7 @@ public:
     const unsigned getNumberOfNeurons() const {return numberOfNeurons;}
     void init();
     void calculateOutputs();
-    void backPropagate(const int label);
+    void backPropagate();
     void updateNablaB();
     void updateNablaW();
     void resetNablaB();

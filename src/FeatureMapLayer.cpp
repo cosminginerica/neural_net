@@ -30,7 +30,7 @@ FeatureMapLayer::FeatureMapLayer(const unsigned _localReceptiveFieldSize,
             break;
     }
     
-    classId = "FeatureMapLayer";
+    classId = "FeatureMap";
 }
 
 void FeatureMapLayer::calculateOutputs()
@@ -44,7 +44,7 @@ void FeatureMapLayer::calculateOutputs()
 	                           localReceptiveFieldSize,
 	                           localReceptiveFieldSize, 
 	                           strideSize);
-	for (unsigned i = 0; i < rows; ++i)
+    for (unsigned i = 0; i < rows; ++i)
 	{
 		for (unsigned j = 0; j < cols; ++j)
 		{
@@ -92,67 +92,24 @@ void FeatureMapLayer::initBias()
 	nablaB = 0;
 }
 
-void FeatureMapLayer::backPropagate(const int label)
+void FeatureMapLayer::backPropagate()
 {
-	FloatingType **nextDeltas = outputLayer->getDelta();
-	if (outputLayer->getClassId() == "MaxPool")
-	{
-	    FloatingType **nextDeltasExpanded = mp2fm();
-	    for (unsigned i = 0; i < rows; ++i)
-	    {
-		    for (unsigned j = 0; j < cols; ++j)
-		    {
-			    deltas[i][j] = nextDeltasExpanded[i][j] * activation->calcActivationPrime(zs[i][j]);
-		    }
-	    }
 
-	    for (unsigned i = 0; i < rows; ++i)
-	    {
-		    delete[]nextDeltasExpanded[i];
-	    }
-	    delete[]nextDeltasExpanded;
-	}
-	else
-	{
-	    FloatingType **nextWeights = outputLayer->getWeights();
-		FloatingType **w_t = HelperFunctions::matrixTranspose(nextWeights, 
-		                                                      outputLayer->getNumberOfNeurons(),
-		                                                      numberOfNeurons);
-		FloatingType **nextDelta = outputLayer->getDelta();
-		
-		FloatingType *nextDeltaVec = HelperFunctions::mat2vec(nextDelta, 
-		                                                      outputLayer->getRows(), 
-		                                                      outputLayer->getCols());
-		                                                      
-		FloatingType *w_d = HelperFunctions::matVecMul(w_t, 
-		                                               numberOfNeurons, 
-		                                               outputLayer->getNumberOfNeurons(), 
-		                                               nextDeltaVec, 
-		                                               outputLayer->getNumberOfNeurons());
-		                                               
-		FloatingType *zsVec = HelperFunctions::mat2vec(zs, rows, cols);
-		FloatingType* sigmoids = activation->activationPrimeVec(zsVec, numberOfNeurons);
-		FloatingType* d = HelperFunctions::hadamardProduct(w_d, sigmoids, numberOfNeurons);
-		unsigned crtIdx = 0;
-		for (unsigned i = 0; i < rows; ++i)
-		{
-			for (unsigned j = 0; j < cols; ++j)
-			{
-				deltas[i][j] = d[crtIdx];
-				crtIdx++;
-			}
-		}
-		delete[]zsVec;
-		delete[]d;
-		delete[]sigmoids;
-		delete[]w_d;
-		delete[]nextDeltaVec;
-		for (unsigned i = 0; i < numberOfNeurons; ++i)
-		{
-			delete[]w_t[i];
-		}
-		delete[]w_t;
-	}
+    FloatingType **nextDeltasExpanded = mp2fm();
+    for (unsigned i = 0; i < rows; ++i)
+    {
+        for (unsigned j = 0; j < cols; ++j)
+        {
+            deltas[i][j] = nextDeltasExpanded[i][j] * activation->calcActivationPrime(zs[i][j]);
+        }
+    }
+
+    for (unsigned i = 0; i < rows; ++i)
+    {
+        delete[]nextDeltasExpanded[i];
+    }
+    delete[]nextDeltasExpanded;
+
 	updateNablaB();
 	updateNablaW();
 }

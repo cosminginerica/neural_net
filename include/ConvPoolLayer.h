@@ -23,11 +23,14 @@ public:
     void updateBiases(const FloatingType eta, const int miniBatchSize);
     void init();
     std::string const getClassId();
-    const unsigned getNumberOfNeurons();
+    const unsigned getNumberOfNeurons(); // as input
 private:
+    FloatingType** formatOutput();
+    FloatingType** formattedOutput;
     std::vector<FeatureMapLayer> featureMaps;
     std::vector<MaxPoolLayer> maxPools;
     unsigned numFeatureMaps, localReceptiveFieldSize, maxPoolSize, strideSize;
+    bool hasFormattedOutput;
 };
 
 #endif
